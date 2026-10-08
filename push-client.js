@@ -18,7 +18,7 @@ button.onclick=async()=>{
   subscription=await registration.pushManager.getSubscription();
   if(subscription){await api('/api/unsubscribe',subscription.toJSON());if(!await subscription.unsubscribe())throw Error('Disattivazione locale non riuscita. Riprova.');subscription=null;show('Notifiche disattivate');}
   else{
-   const permission=await permissionRequest;if(permission!=='granted'){show('Autorizzazione non concessa');return;}
+   const permission=await permissionRequest;if(permission!=='granted'){show(permission==='denied'?'Autorizzazione negata':'Richiesta non confermata: controlla l’icona accanto all’indirizzo. In Chrome: Impostazioni > Impostazioni sito > Notifiche > gabberthomson.github.io > Consenti. Poi ricarica e riprova.');return;}
    const r=await fetch(PUSH_API+'/api/config');if(!r.ok)throw Error('Configurazione non disponibile');const cfg=await r.json();
    subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:toBytes(cfg.vapidPublicKey)});
    try{await api('/api/subscribe',subscription.toJSON());}catch(e){await subscription.unsubscribe();subscription=null;throw e;}
