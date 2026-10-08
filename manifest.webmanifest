@@ -1,0 +1,17 @@
+{
+  "name": "Morning Financial Briefing",
+  "short_name": "Morning Markets",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101c2d",
+  "theme_color": "#122139",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
