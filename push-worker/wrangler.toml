@@ -2,8 +2,11 @@ name = "morning-briefing-push"
 main = "src/index.js"
 compatibility_date = "2026-10-08"
 
-# Dopo aver creato D1 sostituire <D1_DATABASE_ID> e rimuovere i caratteri <>.
+# Dopo aver creato D1 sostituire fcc2978d-7b86-43fb-bf8d-085083c8e90d e rimuovere i caratteri <>.
 [[d1_databases]]
 binding = "DB"
 database_name = "morning-briefing-push"
-database_id = "<D1_DATABASE_ID>"
+database_id = "fcc2978d-7b86-43fb-bf8d-085083c8e90d"
+
+[vars]
+VAPID_SUBJECT = "https://github.com/gabberthomson/morning-financial-briefing"
