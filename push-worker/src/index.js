@@ -41,7 +41,7 @@ export function createWorker(send=sendPushNotification,fetchReport=fetch){return
   if(!test&&!validDate(date))return json({error:'invalid date'},400);
   if(test&&!validSub(info.subscription))return json({error:'a single valid subscription is required'},400);
   if(!test){
-   const report=await fetchReport(HOME+'publication.json',{cache:'no-store',redirect:'error'});
+   const report=await fetchReport(HOME+'publication.json',{redirect:'manual',cf:{cacheTtl:0,cacheEverything:false}});
    if(!report.ok)return json({error:'publication not available'},409);
    let publication;try{publication=await report.json();}catch{return json({error:'publication manifest not available'},409);}
    if(publication.date!==date||publication.status!=='published')return json({error:'edition not published'},409);
@@ -61,4 +61,3 @@ export function createWorker(send=sendPushNotification,fetchReport=fetch){return
  }catch(error){if(String(error?.message).includes('subscription capacity reached'))return json({error:'Free-plan capacity reached (20 devices)'},409);return json({error:'service unavailable'},503);}
 }};}
 export default createWorker();
-
