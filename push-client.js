@@ -3,7 +3,7 @@ const button=document.getElementById('subscribe');
 const status=document.getElementById('push-status');
 const diagnostics=document.getElementById('push-diagnostics');
 const diagnosticPanel=document.getElementById('push-diagnostic-panel');
-const check={version:'5',before:null,result:null,gesture:null,stage:'avvio',permissionApi:'in verifica',error:null};
+const check={version:'6',before:null,result:null,gesture:null,stage:'avvio',permissionApi:'in verifica',error:null};
 function inspect(){
  if(!diagnostics)return;
  diagnostics.textContent=[
@@ -50,7 +50,7 @@ button.onclick=async()=>{
    wantEnable=true;
    const permission=await permissionRequest;
    check.result=permission;check.stage='risposta del browser';
-   if(permission!=='granted'){if(diagnosticPanel)diagnosticPanel.open=true;show(permission==='denied'?'La richiesta ha restituito «denied». Il controllo nella pagina mostra i valori ricevuti dal browser.':'La richiesta ha restituito «default»: nessuna autorizzazione confermata.');return;}
+   if(permission!=='granted'){if(diagnosticPanel)diagnosticPanel.open=true;show(permission==='denied'?(Notification.permission==='default'?'Richiesta respinta dal browser; il permesso del sito è ancora da decidere. Usa la pagina di prova disponibile sotto il controllo.':'Permesso del sito negato dal browser.'):'La richiesta ha restituito «default»: nessuna autorizzazione confermata.');return;}
    check.stage='sottoscrizione push';
    await enable();
   }

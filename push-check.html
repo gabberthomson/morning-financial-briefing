@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verifica permesso notifiche</title><style>body{font:17px system-ui;max-width:650px;margin:32px auto;padding:0 20px;line-height:1.5}button,a{font:inherit}button{padding:12px 18px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eee;padding:14px;font-size:13px}</style></head><body>
+<h1>Verifica permesso notifiche</h1>
+<p>Questa pagina chiede soltanto il permesso al browser. Non crea sottoscrizioni e non invia notifiche.</p>
+<button id="ask" type="button">Chiedi permesso al browser</button>
+<p id="message" role="status">Premi il pulsante una volta e osserva se Chrome mostra una richiesta.</p>
+<pre id="result"></pre>
+<p><a href="./?push-check=6">Torna alla PWA</a></p>
+<script>
+const button=document.getElementById('ask'),result=document.getElementById('result'),message=document.getElementById('message');
+const data={browser:navigator.userAgent,before:typeof Notification==='undefined'?'non supportato':Notification.permission};
+const render=()=>result.textContent=Object.entries(data).map(([k,v])=>k+': '+v).join('\n');
+render();
+button.onclick=()=>{
+ if(typeof Notification==='undefined'){message.textContent='API notifiche non disponibile.';return;}
+ data.before=Notification.permission;data.gesture=navigator.userActivation?.isActive;data.focus=document.hasFocus();data.visibility=document.visibilityState;
+ const start=performance.now();
+ // This is the first browser operation in the click handler: no await or UI change.
+ const request=Notification.requestPermission();
+ button.disabled=true;message.textContent='In attesa della risposta di Chrome…';
+ request.then(async permission=>{
+  data.result=permission;data.after=Notification.permission;data.elapsedMs=Math.round(performance.now()-start);
+  try{data.permissionsApi=(await navigator.permissions.query({name:'notifications'})).state;}catch{data.permissionsApi='non disponibile';}
+  message.textContent=permission==='granted'?'Permesso concesso. Torna alla PWA e attiva le notifiche.':permission==='denied'&&data.after==='default'?'Chrome ha respinto la richiesta, senza bloccare permanentemente il sito. Riporta il riquadro qui sotto.':'Riporta il riquadro qui sotto.';
+ }).catch(error=>{data.error=error.name+': '+error.message;message.textContent='Richiesta non riuscita.';}).finally(()=>{button.disabled=false;render();});
+};
+</script></body></html>

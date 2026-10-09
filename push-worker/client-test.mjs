@@ -11,6 +11,7 @@ await new Promise(r=>setImmediate(r));calls=[];
 await button.onclick();assert.equal(calls[0],'request');assert.match(status.textContent,/default/);assert.equal(subscribed,0);assert.equal(button.disabled,false);
 permission='granted';permissionStatus.state='granted';await permissionStatus.onchange();assert.equal(subscribed,1);assert.equal(button.textContent,'Disattiva notifiche');assert.equal(status.textContent,'Notifiche attive');
 await button.onclick();assert.equal(deleted,1);assert.equal(current,null);assert.equal(button.textContent,'Attiva notifiche');assert.equal(status.textContent,'Notifiche disattivate');
+notification.requestPermission=async()=>{calls.push('request');return 'denied';};permission='default';await button.onclick();assert.match(status.textContent,/ancora da decidere/);assert.equal(button.disabled,false);assert.equal(subscribed,1);
 permission='denied';permissionStatus.state='denied';await permissionStatus.onchange();assert.match(diagnostics.textContent,/Permesso attuale \(Notification\): denied/);assert.equal(button.textContent,'Permesso browser: negato');assert.equal(panel.open,true);
 console.log('PASS: direct click permission request, Chrome quiet timeout, late permission grant, activation, deactivation.');
 
